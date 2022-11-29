@@ -1,0 +1,57 @@
+//스위치문을 이용한 계산기 프로그램
+
+package com.kh.day04.exercise;
+
+import java.util.Scanner;
+
+public class Exercise_CalculatorFor {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		//int count = 0;
+		
+		for (; true;) {
+			System.out.print("정수 하나 입력 : ");
+			int num1 = sc.nextInt();
+			
+			System.out.print("정수 하나 더 입력 : ");
+			int num2 = sc.nextInt();
+			
+			System.out.print("연산자 입력 (+,-,*,/,%) : ");
+			char operator = sc.next().charAt(0);
+			
+			int result = 0;
+			
+			// 연산자 판별 후 연산 수행 그리고 결과를 저장
+			
+			switch (operator) {
+			case '+':
+				result = num1 + num2;
+				break;
+			case '-':
+				result = num1 - num2;
+				break;
+			case '*':
+				result = num1 * num2;
+				break;
+			case '/':
+				result = num1 / num2;
+				break;
+			case '%':
+				result = num1 % num2;
+				break;
+			}
+			
+			System.out.println(num1 + " " + operator + " " + num2 + " = " + result + " 입니다.");
+			System.out.println();
+			
+			System.out.print("끝내시겠습니까? (y/n) : ");
+			char word = sc.next().charAt(0);
+			
+			if(word == 'y') {
+				break;
+			}else if(word == 'Y') {
+				break;
+			}
+		}
+	}
+}
