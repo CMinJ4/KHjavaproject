@@ -14,6 +14,6 @@ public class Run {
 		//exFor.exercise4();
 		//exWhile.exercise3();
 		//exArray.exercise1();
-		exArray.exercise5();
+		exArray.exercise7();
 	}
 }
