@@ -24,6 +24,7 @@ public class Exam_Read {
 				}
 				System.out.print((char)readByte);
 			}
+			//reader.close();
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
