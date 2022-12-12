@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 public class BaseballServer {
@@ -18,12 +20,15 @@ public class BaseballServer {
 		DataInputStream dis = null;
 		DataOutputStream dos = null;
 		int [] numbers = new int[3];
+		SimpleDateFormat trans = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS");
 		Random rand = new Random();
 		
 		try {
 			System.out.println("서버소켓을 생성하였습니다.");
 			serverSocket = new ServerSocket(port);
 			Thread.sleep(2000);
+			Date date = new Date();
+			System.out.println(trans.format(date));
 			System.out.println("클라이언트의 접속을 기다립니다.");
 			Socket socket = serverSocket.accept();
 			System.out.println("클라이언트가 접속했습니다.");
@@ -39,20 +44,64 @@ public class BaseballServer {
 				for(int j = 0; j < i; j++) {
 					if(numbers[i] == numbers[j]) {
 						i--;
+						break;
 					}
 				}
 			}
 			System.out.println("서버 숫자 -> " + numbers[0] + " " + numbers[1] + " " + numbers[2]);
 			System.out.println("서버 준비 완료");
+			int strike = 0;
+			int ball = 0;
 			
-			// 값 받기
-			String readNum = dis.readUTF();
-			System.out.println("받기 : " + readNum);
+			while(true) {
+				// 값 받기
+				String readNum = dis.readUTF();
+				System.out.println("받기 : " + readNum);
+				// 받은 값이 numbers의 값과 비교했을 때
+				// 숫자가 맞고 위치도 맞는지
+				// 숫자는 맞는데 위치는 틀린지
+				// 아무것도 맞지 않았는지를
+				// 스트라이크, 볼로 출력해준다.
+
+				
+				String [] readNums = readNum.split(" ");
+				String result = "";
+				for (int i = 0; i < numbers.length; i++) {
+					for(int j = 0; j < readNums.length; j++) {
+						if(numbers[i] == Integer.parseInt(readNums[j])) {
+							if(i == j) {
+								strike ++;
+							}else {
+								ball ++;
+							}
+						}
+					}
+				}
+				result = strike + "스트라이크 " + ball + "볼";
+				dos.writeUTF(result);
+				
+				if(strike == 3) {
+					System.out.println(result);
+					System.out.println("축하합니다. 아웃입니다!");
+					break;
+				}
+				strike = 0;
+				ball = 0;
+			}
 			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		} finally {
+			try {
+				dos.close();
+				dis.close();
+				is.close();
+				os.close();
+				serverSocket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		

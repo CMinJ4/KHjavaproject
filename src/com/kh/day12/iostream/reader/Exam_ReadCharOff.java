@@ -12,7 +12,7 @@ public class Exam_ReadCharOff {
 		try {
 			reader = new FileReader("src/iostream/filereader.txt");
 			char [] cbuf = new char[10];
-			reader.read(cbuf, 4, 3); //질문해야함.
+			reader.read(cbuf, 4, 3);
 			for(int i = 0; i < cbuf.length; i++) {
 				System.out.print(cbuf[i]);
 			}
