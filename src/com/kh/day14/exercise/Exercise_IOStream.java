@@ -25,39 +25,44 @@
 		// 2. 선택하면 정보가 출력됨
 package com.kh.day14.exercise;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Exercise_IOStream {
+	private static String name;
+	private static int age;
+	private static String address;
+	
+	
 	public static void main(String [] args) {
 
 		String inputData = "";
 		
 		end:
 		while(true) {
-			System.out.println("1. 정보입력");
-			System.out.println("2. 정보출력");
-			System.out.println("3. 정보저장(save)");
-			System.out.println("4. 정보불러오기(load)");
-			System.out.println("0. 종료");
-			System.out.print("메뉴 입력 : ");
-			Scanner sc = new Scanner(System.in);
-			int input = sc.nextInt();
+			
+			int input = printMenu();
 			
 			
 			switch(input){
 			case 1 : 
-				inputData = insert();
-				System.out.println(inputData);
+				insert();
 				break;
 			case 2 :
-				print(inputData); 
+				print(); 
 				break;
 			case 3 : 
-				save(inputData); 
+				save(); 
 				break;
 			case 4 : 
 				load(); 
@@ -72,45 +77,76 @@ public class Exercise_IOStream {
 		}
 	}
 	
-	
-	
-	static String insert() {
+	static int printMenu() {
+		System.out.println("1. 정보입력");
+		System.out.println("2. 정보출력");
+		System.out.println("3. 정보저장(save)");
+		System.out.println("4. 정보불러오기(load)");
+		System.out.println("0. 종료");
+		System.out.print("메뉴 입력 : ");
 		Scanner sc = new Scanner(System.in);
-		String str = "";
-		System.out.print("이름 : ");
-		str += sc.nextLine();
-		System.out.print("나이 : ");
-		str += "/" + sc.nextLine();
-		System.out.print("주소 : ");
-		str += "/" + sc.nextLine();
-		
-		System.out.println(str);
-		return str;
+		return sc.nextInt();
 	}
 	
-	static void print(String data) {
-		String [] printData = data.split("/");
-		System.out.println("이름 : " + printData[0]);
-		System.out.println("나이 : " + printData[1]);
-		System.out.println("주소 : " + printData[2]);
+	static void insert() {
+		Scanner sc = new Scanner(System.in);
+		System.out.print("이름 : ");
+		name = sc.nextLine();
+		System.out.print("나이 : ");
+		age = sc.nextInt();
+		sc.nextLine(); // 엔터값을 없애줌
+		System.out.print("주소 : ");
+		address = sc.nextLine();
+	}
+	
+	static void print() {
+		System.out.println("====== 정보 출력 ======");
+		System.out.println("이름 : " + name);
+		System.out.println("나이 : " + age);
+		System.out.println("주소 : " + address);
+		System.out.println("====== ========= ======");
 		System.out.println();
 	}
 	
-	static void save(String name) {
-		String [] nameData = name.split("/");
-		Writer writer = null;
+	static void save() {
+		Writer os = null;
 		try {
-			writer = new FileWriter("src/com/kh/day14/exercise/" + nameData[0] + ".txt");
-			for(int i = 0; i < nameData.length; i++) {
-				writer.write(nameData[i] + "/");
-			}
+			String result = name + "/" + age +"/" + address;
+			os = new FileWriter("src/iostream/" + name + ".txt");
+			os.write(result);
+			os.flush();
+			System.out.println("저장 완료 되었습니다.");
+			System.out.println();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	static void load() {
+		Scanner sc = new Scanner(System.in);
+		System.out.print("불러올 파일 이름 : ");
+		String fileName = sc.nextLine();
+		String result = "";
+		
+		Reader reader = null;
+		BufferedReader bfReader = null;
+		try {
+			reader = new FileReader("src/iostream/" + fileName + ".txt");
+			bfReader = new BufferedReader(reader);
+			result = bfReader.readLine();
+			StringTokenizer st = new StringTokenizer(result, "/");
+			name = st.nextToken();
+			age = Integer.parseInt(st.nextToken());
+			address = st.nextToken();
+			System.out.println("로드가 완료되었습니다!!");
+			System.out.println();
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		
 	}
 }
